@@ -4,6 +4,7 @@ import loansController from '../Controller/loansController.js';
 const loansRouter = express.Router();
 
 loansRouter.post('/new',loansController.newLoanController);
-loansRouter.post('/history',loansController.newLoanController);
+loansRouter.post('/history',loansController.getLoanHistroyController);
+loansRouter.post('/update',loansController.updateLoanStatusController);
 
 export default loansRouter;

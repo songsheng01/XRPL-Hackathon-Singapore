@@ -43,7 +43,6 @@ async function scanAll() {
     }
 }
 
-//这里看一看需不需要清算
 async function updateInterest(txn) {
   const getParams = {
     TableName: 'loanDB',
@@ -78,4 +77,26 @@ async function updateInterest(txn) {
   return updateRes.Attributes
 }
 
-export { createLoan,scanAll,updateInterest }
+async function updateStatus(txn, newStatus) {
+  try {
+    const params = {
+      TableName: "loanDB",
+      Key: { txn },
+      UpdateExpression: "SET #st = :s",
+      ExpressionAttributeNames: {
+        "#st": "status"
+      },
+      ExpressionAttributeValues: {
+        ":s": newStatus
+      },
+      ReturnValues: "UPDATED_NEW"
+    };
+    const result = await docClient.send(new UpdateCommand(params));
+    return result.Attributes;  // 返回更新后的字段
+  } catch (error) {
+    console.error("Error updating status:", error);
+    throw error;
+  }
+}
+
+export { createLoan,scanAll,updateInterest,updateStatus }
