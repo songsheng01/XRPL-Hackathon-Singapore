@@ -1,4 +1,4 @@
-import { createLoan,scanAll,updateInterest } from "../models/loanModel";
+import { createLoan,scanAll,updateInterest } from "../models/loanModel.js";
 
 export const addNewLoan = async(txn,borrower,rlusdAmount,xrpAmount) =>{
     try {

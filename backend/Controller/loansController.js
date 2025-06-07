@@ -1,4 +1,4 @@
-import { addNewLoan,getLoanHistroy } from "../services/loanService";
+import { addNewLoan,getLoanHistroy } from "../services/loanService.js";
 
 export const newLoanController = async (req,res) =>{
     try{
