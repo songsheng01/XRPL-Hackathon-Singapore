@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export default function MainStats() {
   const [price, setPrice] = useState("—");     // XRP per 1 RLUSD
-  const [delta, setDelta] = useState("—");
+  const [delta, setDelta] = useState("0.0%");
 
   // fetch on mount + every 60 s
   useEffect(() => {
@@ -10,12 +10,12 @@ export default function MainStats() {
 
     async function fetchPrice() {
       try {
-        console.log("price fetched")
         const res = await fetch("/oracle/price");
         if (!res.ok) throw new Error("HTTP " + res.status);
         const { price: p } = await res.json();   // p is number
         if (prev !== null) {
           const pct = (((p - prev) / prev) * 100).toFixed(2) + " %";
+          console.log(pct)
           setDelta(pct.startsWith("-") ? pct : "+" + pct);
         }
         prev = p;
@@ -46,7 +46,7 @@ export default function MainStats() {
       <div className="relative max-w-5xl mx-auto py-10 px-6">
         <h2 className="text-3xl font-semibold mb-6">Pool Overview</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
           <StatCard label="RLUSD → XRP" value={price} sub={delta} />
           <StatCard label="Total XRP in Pool" value={poolXRP} sub="XRP" />
           <StatCard label="Total RLUSD Debt" value={poolDebt} sub="RLUSD" />
