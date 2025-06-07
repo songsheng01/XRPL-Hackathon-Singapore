@@ -10,7 +10,7 @@ app.use(express.json());
 
 /* sample endpoint: return server ledger height */
 app.get("/api/ledger", async (_req, res) => {
-  const client = new Client("wss://s.altnet.rippletest.net:51233");
+  const client = new Client("wss://hooks-testnet-v3.xrpl-labs.com");
   await client.connect();
   const info = await client.request({ command: "ledger", ledger_index: "validated" });
   await client.disconnect();
