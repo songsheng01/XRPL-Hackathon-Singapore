@@ -1,0 +1,21 @@
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { Client } from "xrpl";
+
+dotenv.config();
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+/* sample endpoint: return server ledger height */
+app.get("/api/ledger", async (_req, res) => {
+  const client = new Client("wss://s.altnet.rippletest.net:51233");
+  await client.connect();
+  const info = await client.request({ command: "ledger", ledger_index: "validated" });
+  await client.disconnect();
+  res.json({ height: info.result.ledger.ledger_index });
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Backend listening on ${PORT}`));
