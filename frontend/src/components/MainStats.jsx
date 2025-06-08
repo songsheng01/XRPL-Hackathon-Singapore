@@ -47,7 +47,7 @@ export default function MainStats() {
         <h2 className="text-3xl font-semibold mb-6">Pool Overview</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-          <StatCard label="RLUSD → XRP" value={price} sub={delta} />
+          <StatCard label="XRP → RLUSD" value={price} sub={delta} />
           <StatCard label="Total XRP in Pool" value={poolXRP} sub="XRP" />
           <StatCard label="Total RLUSD Debt" value={poolDebt} sub="RLUSD" />
           <StatCard label="Utilisation" value={utilisation} />

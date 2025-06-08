@@ -1,6 +1,6 @@
-import { createLoan,scanAll,updateInterest,updateStatus } from "../models/loanModel.js";
+import { createLoan, scanAll, updateInterest, updateStatus } from "../models/loanModel.js";
 
-export const addNewLoan = async(txn,borrower,rlusdAmount,xrpAmount) =>{
+export const addNewLoan = async(txn,borrower,rlusdAmount,xrpAmount) => {
     try {
         await createLoan(txn,borrower,rlusdAmount,xrpAmount);
         return {success: true};
@@ -9,7 +9,7 @@ export const addNewLoan = async(txn,borrower,rlusdAmount,xrpAmount) =>{
         return {success: false, error:error.message};
     }
 }
-export const getLoanHistroy = async () =>{
+export const getLoanHistroy = async () => {
     try {
         const allLoans = await scanAll();
         return {
@@ -22,7 +22,7 @@ export const getLoanHistroy = async () =>{
     }
 }
 
-export const updateLoanStatus = async (txn,type) =>{
+export const updateLoanStatus = async (txn,type) => {
     try{
         const response = await updateStatus(txn,type);
         //在这里我们可以处理一些脸上逻辑

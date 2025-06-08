@@ -35,24 +35,50 @@ export async function sendPayment({
 }) {
   const client = await getClient();
 
-  const tx = {
+  /* 1. Build bare-bones Payment ----------------------------- */
+  let tx = {
     TransactionType: "Payment",
     Account: poolWallet.classicAddress,
     Destination: destination,
     Amount: amount,
-    Memos: memos.map((m) => ({
-      Memo: {
-        MemoType: Buffer.from(m.type, "utf8").toString("hex").toUpperCase(),
-        MemoData: Buffer.from(m.data, "utf8").toString("hex").toUpperCase()
+    ...(
+      memos.length && {
+        Memos: memos.map((m) => ({
+          Memo: {
+            MemoType: Buffer.from(m.type, "utf8").toString("hex").toUpperCase(),
+            MemoData: Buffer.from(m.data, "utf8").toString("hex").toUpperCase()
+          }
+        }))
       }
-    }))
+    )
   };
 
+  /* 2. Autofill fee, sequence, LastLedgerSequence ------------- */
+  tx = await client.autofill(tx);
+
+  /* 3. Sign & submit ----------------------------------------- */
   const signed = poolWallet.sign(tx);
   const res = await client.submitAndWait(signed.tx_blob);
 
-  if (res.result.engine_result !== "tesSUCCESS") {
-    throw new Error(`Payment failed: ${res.result.engine_result}`);
+  const r = res.result;
+
+  const success =
+    (r.engine_result && r.engine_result.startsWith("tes")) ||
+    (r.status === "success") ||
+    (r.accepted === true) ||
+    (r.meta?.TransactionResult && r.meta.TransactionResult.startsWith("tes"));
+
+  if (!success) {
+    const code = r.engine_result ?? r.status ?? r.error ?? "unknown_error";
+    throw new Error(`Payment failed: ${code}`);
   }
-  return res.result.tx_json.hash;
+
+  /* Try every possible hash field, otherwise "pending" */
+  const txHash =
+    r.tx_json?.hash ??
+    r.hash ??
+    r.tx_hash ??
+    "pending";
+
+  return txHash;
 }

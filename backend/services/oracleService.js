@@ -32,14 +32,13 @@ async function getUsdPerXrp() {
 
 async function oracleLoop() {
   try {
-    const usdPerXrp = await getUsdPerXrp();     // e.g. 0.53 USD
-    const rlusdPerXrp = 1 / usdPerXrp;          // e.g. 1 USD / 0.53 = 1.8868 XRP
-    const px = Number(rlusdPerXrp.toFixed(6));
+    const usdPerXrp = await getUsdPerXrp();     // e.g. 0.53 USD       // e.g. 1 USD / 0.53 = 1.8868 XRP
+    const px = Number(usdPerXrp.toFixed(6));
 
     latestPx = px;
     lastTs   = Date.now();
 
-    console.log(`[oracle] RLUSD→XRP ${px}  (feed ${usdPerXrp} USD/XRP)`);
+    console.log(`[oracle] XRP→RLUSD ${px}  (feed ${usdPerXrp} USD/XRP)`);
 
     /* optional: persist to Dynamo singleton if you like
        await ddb.update({ … });
