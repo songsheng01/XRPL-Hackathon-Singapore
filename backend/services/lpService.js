@@ -52,5 +52,3 @@ export const updateInterest = async (userAddress,interest) => {
         return {success: false, error:error.message};
     }
 }
-
-// export {updateFunding,getUserFunding,updateInterest}

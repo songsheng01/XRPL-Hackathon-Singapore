@@ -1,5 +1,5 @@
 import { addNewLoan,getLoanHistroy,updateLoanStatus } from "../services/loanService.js";
-
+import { updateInterest } from "../models/loanModel.js";
 export const newLoanController = async (req,res) =>{
     try{
         const {txn,borrower,rlusdAmount,xrpAmount} = req.body;
@@ -25,7 +25,7 @@ export const getLoanHistroyController = async (req, res) =>{
     }
 }
 
-export const  updateLoanStatusController = async( req,res ) =>{
+export const updateLoanStatusController = async( req,res ) =>{
     try {
         const {txn,type} = req.body;
         const response = await updateLoanStatus(txn,type);
@@ -39,4 +39,16 @@ export const  updateLoanStatusController = async( req,res ) =>{
     }
 }
 
-export default { newLoanController,getLoanHistroyController,updateLoanStatusController  };
+//future ganna be deploy on aws cloudwatch
+export const updateInterestController = async (req,res) =>{
+    try {
+        const {txn} = req.body;
+        const response = await updateInterest(txn);
+        return res.status(200).json({ success: true, response: response });
+    }catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+export default { newLoanController,getLoanHistroyController,updateLoanStatusController,updateInterestController };
