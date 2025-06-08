@@ -15,8 +15,8 @@ async function createLoan(txn,borrower, rlusdAmount,xrpAmount) {
         status:{S : "active"}
     }
     const params = {
-        TableName:"loanDB",
-        Item: newLoan
+      TableName:"loanDB",
+      Item: newLoan
     }
     try {
         const command = new PutItemCommand(params);

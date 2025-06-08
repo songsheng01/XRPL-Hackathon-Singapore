@@ -7,5 +7,6 @@ loansRouter.post('/borrow', loansController.newLoanController);
 loansRouter.post('/history', loansController.getLoanHistroyController);
 loansRouter.post('/update' ,loansController.updateLoanStatusController);
 loansRouter.post("/repay", loansController.repayLoanController);
+loansRouter.post('/interest',loansController.updateInterestController);
 
 export default loansRouter;

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { Client } from "xrpl";
 import loansRouter from "./routes/loans.js";
 import oracleRouter from "./routes/oracle.js";
+import lpRouter from "./routes/lp.js";
 import "./services/oracleService.js";
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use("/oracle", oracleRouter);
 app.use('/loans',loansRouter);
+app.use('/lp',lpRouter);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Backend listening on ${PORT}`));
