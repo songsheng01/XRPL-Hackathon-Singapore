@@ -77,11 +77,11 @@ export const repayLoanController = async (req, res) => {
   try {
     const { loanId } = req.body;
     const loan = await repayLoan(loanId);        // returns closed loan row
-
+    
     // send collateral back to borrower
     await sendPayment({
-      destination: loan.borrower.S,
-      amount: ((Number(loan.xrpAmount.N) * 1_000_000).toString()),
+      destination: loan.borrower,
+      amount: ((Number(loan.xrpAmount) * 1_000_000).toString()),
       memos: [{ type: "REPAY", data: loanId }]
     });
 

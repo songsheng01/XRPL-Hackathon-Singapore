@@ -1,1 +1,3 @@
 export const POOL_ADDRESS = "rGCaGzeuSEyVJmCYpp1yAuiNQHgV7GUNFQ";
+export const RLUSD_HEX = "524C555344000000000000000000000000000000";
+export const RLUSD_ISSUER = "rQhWct2fv4Vc4KRjRgMrxa8xPN9Zx9iLKV"; // Testnet RLUSD issuer

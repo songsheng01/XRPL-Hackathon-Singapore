@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { WalletContext } from "./WalletContext";
 import { sendPayment } from "@gemwallet/api";
 import { POOL_ADDRESS } from "../config";
+import { RLUSD_HEX, RLUSD_ISSUER } from "../config";
 
 export default function BorrowTab() {
   const { connected, address, balances, refresh } = useContext(WalletContext);
@@ -74,40 +75,66 @@ export default function BorrowTab() {
   /* ── MY LOANS (client-side filter) ───────────────────────── */
   const [rows, setRows] = useState([]);
 
-  useEffect(() => {
+  const pullHistory = async () => {
     if (!connected) { setRows([]); return; }
+    try {
+      const r = await fetch("/loans/history", { method: "POST" });
+      const { response } = await r.json();          // backend returns all
+      const mineRaw = response.filter((i) => i.borrower === address);
+      console.log(mineRaw)
 
-    const pullHistory = async () => {
-      try {
-        const r = await fetch("/loans/history", { method: "POST" });
-        const { response } = await r.json();          // backend returns all
-        const mineRaw = response.filter((i) => i.borrower === address);
-        console.log(mineRaw)
+      const mapped = mineRaw.map((i) => {
+        const rawId = i.txn;
+        const id = rawId.slice(0, 6) + "…";
+        const coll = Number(i.xrpAmount);
+        const debt = Number(i.totaldebt);
+        const ltv = oraclePx
+          ? ((debt / (coll * oraclePx)) * 100).toFixed(0) + " %"
+          : "—";
+        const status = i.status;
+        return {
+          id,
+          rawId,
+          coll,
+          debt,
+          ltv,
+          status
+        };
+      });
+      console.log(mapped);
+      setRows(mapped);
+    } catch { }
+  };
 
-        const mapped = mineRaw.map((i) => {
-          const coll = Number(i.xrpAmount);
-          const debt = Number(i.totaldebt);
-          const ltv = oraclePx
-            ? ((debt / (coll * oraclePx)) * 100).toFixed(0) + " %"
-            : "—";
-          const status = i.status;
-          return {
-            id: i.txn.slice(0, 6) + "…",
-            coll,
-            debt,
-            ltv,
-            status
-          };
-        });
-        console.log(mapped);
-        setRows(mapped);
-      } catch { }
-    };
-
+  useEffect(() => {
     pullHistory();
     const id = setInterval(pullHistory, 45_000);
     return () => clearInterval(id);
   }, [connected, address, oraclePx]);
+
+  const handleRepay = async (ln) => {
+    if (!connected) return;
+    try {
+      /* sign RLUSD -> pool */
+      await sendPayment({
+        destination: POOL_ADDRESS,
+        amount: {
+          currency: RLUSD_HEX,
+          issuer: RLUSD_ISSUER,   // RLUSD issuer
+          value: ln.debt.toString()
+        }
+      });
+      /* backend notify */
+      await fetch("/loans/repay", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ loanId: ln.rawId })
+      });
+      refresh();
+    } catch (e) {
+      alert("Repay failed: " + e.message);
+    }
+  };
 
   /* ── UI ─────────────────────────────────────────────────────── */
   return (
@@ -178,13 +205,11 @@ export default function BorrowTab() {
                     {ln.status === "active" ? (
                       <button
                         className="px-3 py-1 bg-gray-800 rounded hover:bg-gray-700 text-xs"
-                        onClick={() => alert("TODO: repay flow")}
+                        onClick={() => handleRepay(ln)}
                       >
                         Repay
                       </button>
-                    ) : (
-                      "-"
-                    )}
+                    ) : "-"}
                   </td>
                 </tr>
               ))}

@@ -89,7 +89,7 @@ async function updateStatus(txn, newStatus) {
       ExpressionAttributeValues: {
         ":s": newStatus
       },
-      ReturnValues: "UPDATED_NEW"
+      ReturnValues: "ALL_NEW"
     };
     const result = await docClient.send(new UpdateCommand(params));
     return result.Attributes;  // 返回更新后的字段
