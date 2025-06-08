@@ -27,8 +27,8 @@ When XRPL ships native smart-contract support:
 Because collateral & debt are simply XRPL IOUs, any asset tokenized on-chain can be whitelisted as collateral:
 | RWA Example | Flow with our pool |
 |-------|-----------|
-| Carbon credit NFTs |	ESG project tokenises CO₂ tons → locks them → borrows RLUSD to finance new green sites. |
-| Invoice tokens	SME | mints “invoice-2025-07” tokens → borrows working capital instantly. |
+| Carbon credit tokens |	ESG project tokenizes CO₂ tons → locks them → borrows RLUSD to finance new green sites. |
+| Idle company capital & land | Corporation tokenises surplus cash reserves or land-titles → locks them as collateral → draws RLUSD working capital instantly. |
 | Real-estate shares | REIT issues fractionalized deeds → lenders earn yield; owners unlock liquidity without selling property. |
 
 Plug-and-play endpoints (/borrow, /repay, /lp_fund, /lp_withdraw) and standard XRPL payments make integration a two-step drop-in for any RWA front-end.
