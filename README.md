@@ -33,5 +33,21 @@ Because collateral & debt are simply XRPL IOUs, any asset tokenized on-chain can
 
 Plug-and-play endpoints (/borrow, /repay, /lp_fund, /lp_withdraw) and standard XRPL payments make integration a two-step drop-in for any RWA front-end.
 
+## Technical snapshot
+# SDK / stack
+- xrpl.js (v3) — ledger queries, autofill, reliable submission
+- @gemwallet/api — in-browser signing for XRP & RLUSD payments
+- AWS SDK v3 (DynamoDBDocumentClient) — ledger-indexed loan / LP state
+- Express + Node 18 service layer, CloudWatch cron for daily interest
+- React 18 + Tailwind v3 single-page UI
+# XRPL features we lean on
+- Issued-currency trust-lines: store RLUSD balances, LP shares and loan debt entirely on-chain.
+- Native DEX order-books & autobridging: provide a built-in RLUSD-XRP mid-price oracle.
+- Payment-level memos: bind every collateral deposit, disbursal and liquidation to a Dynamo record via tx-hash for auditability.
+- 3-4s finality & <0.001 XRP fees: make rapid collateral rotation and liquidations economic even for small tickets.
+- Multisig / smart contract upgrade: today’s pool uses one hot key; tomorrow it can swap to on-ledger smart-contracts without changing UI or user workflow, gaining full trustlessness and transparency.
+
+These XRPL primitives—cheap deterministic finality, built-in Dex pricing, and account-level IOU handling—let us ship the first collateralised lending rail and instantly give RLUSD (and future RWA tokens) a deep, yield-driven utility loop.
+
 ## Summary
 We turned idle assets on the XRPL into productive collateral, launched the first lending rail on XRPL, and built a bridge-ready base for future smart-contract upgrades and RWA finance—from carbon credits to idle corporate capital—while giving RLUSD a deep, yield-driven utility loop that boosts demand and on-ledger liquidity.
