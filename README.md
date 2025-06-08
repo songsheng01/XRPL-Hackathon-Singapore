@@ -34,13 +34,13 @@ Because collateral & debt are simply XRPL IOUs, any asset tokenized on-chain can
 Plug-and-play endpoints (/borrow, /repay, /lp_fund, /lp_withdraw) and standard XRPL payments make integration a two-step drop-in for any RWA front-end.
 
 ## Technical snapshot
-# SDK / stack
+### SDK / stack
 - xrpl.js (v3) — ledger queries, autofill, reliable submission
 - @gemwallet/api — in-browser signing for XRP & RLUSD payments
 - AWS SDK v3 (DynamoDBDocumentClient) — ledger-indexed loan / LP state
 - Express + Node 18 service layer, CloudWatch cron for daily interest
 - React 18 + Tailwind v3 single-page UI
-# XRPL features we lean on
+### XRPL features we lean on
 - Issued-currency trust-lines: store RLUSD balances, LP shares and loan debt entirely on-chain.
 - Native DEX order-books & autobridging: provide a built-in RLUSD-XRP mid-price oracle.
 - Payment-level memos: bind every collateral deposit, disbursal and liquidation to a Dynamo record via tx-hash for auditability.
