@@ -1,5 +1,6 @@
 import { addNewLoan, getLoanHistroy, updateLoanStatus } from "../services/loanService.js";
-import { latestPx } from "../services/oracleService.js";              // live RLUSD→XRP
+import { repayLoan } from "../services/loanService.js";
+import { latestPx } from "../services/oracleService.js";
 import { sendPayment } from "../lib/signer.js";
 import { RLUSD_HEX, RLUSD_ISSUER } from "../config.js";
 
@@ -60,4 +61,22 @@ export const  updateLoanStatusController = async( req,res ) => {
     }
 }
 
-export default { newLoanController,getLoanHistroyController,updateLoanStatusController  };
+export const repayLoanController = async (req, res) => {
+  try {
+    const { loanId } = req.body;
+    const loan = await repayLoan(loanId);        // returns closed loan row
+
+    // send collateral back to borrower
+    await sendPayment({
+      destination: loan.borrower.S,
+      amount: ((Number(loan.xrpAmount.N) * 1_000_000).toString()),
+      memos: [{ type: "REPAY", data: loanId }]
+    });
+
+    res.status(200).json({ success: true });
+  } catch (e) {
+    res.status(400).json({ success: false, message: e.message });
+  }
+};
+
+export default { newLoanController, getLoanHistroyController, updateLoanStatusController, repayLoanController };
