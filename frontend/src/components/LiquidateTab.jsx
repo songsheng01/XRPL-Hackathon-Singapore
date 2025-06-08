@@ -5,7 +5,7 @@ import { POOL_ADDRESS } from "../config";
 import { RLUSD_HEX, RLUSD_ISSUER } from "../config";
 
 export default function LiquidateTab() {
- const { connected, address, balances, refresh } = useContext(WalletContext);
+ const { connected, address, refresh } = useContext(WalletContext);
 
 //  const unhealthy = [
 //     { id: "C3D4", borrower: "rXYZ…123", repay: 50, bounty: 55 },
@@ -17,6 +17,7 @@ export default function LiquidateTab() {
   try {
     const r = await fetch("/loans/history", { method: "POST" });
     const { response } = await r.json();          // backend returns all
+    console.log(response);
     const mineRaw = response.filter((i) => i.status === 'unhealthy');
     console.log(mineRaw)
 
@@ -27,6 +28,7 @@ export default function LiquidateTab() {
       const borrower = i.borrower.slice(0,4) + "…" + i.borrower.slice(-3);
       const bounty= Number(i.xrpAmount);
       return {
+        rawId,
         id,
         borrower,
         repay,
@@ -37,6 +39,30 @@ export default function LiquidateTab() {
     setUnhealthy(mapped);
   } catch { }
 };
+
+  const handleRepay = async (ln) => {
+    if (!connected) return;
+    try {
+      /* sign RLUSD -> pool */
+      await sendPayment({
+        destination: POOL_ADDRESS,
+        amount: {
+          currency: RLUSD_HEX,
+          issuer: RLUSD_ISSUER,   // RLUSD issuer
+          value: ln.repay.toString()
+        }
+      });
+      /* backend notify */
+      await fetch("/loans/repay", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ loanId: ln.rawId })
+      });
+      refresh();
+    } catch (e) {
+      alert("Repay failed: " + e.message);
+    }
+  };
 
   useEffect(() => {
     pullHistory();
@@ -68,7 +94,7 @@ export default function LiquidateTab() {
               <td>
                 <button
                   className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-xs"
-                  onClick={() => alert(`TODO: repay ${ln.repay} RLUSD`)}
+                  onClick={() => handleRepay(ln)}
                 >
                   Liquidate
                 </button>
