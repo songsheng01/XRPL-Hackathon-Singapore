@@ -58,3 +58,6 @@ We turned idle assets on the XRPL into productive collateral, launched the first
 
 ## Presentation
 https://www.canva.com/design/DAGj7wkQQIU/oy37-7B12TWq4pjgbMoVQg/edit?utm_content=DAGj7wkQQIU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
+## Demo
+https://www.canva.com/design/DAGpvKKgXfc/lBzYbfuPyFXixZWQNVRCoQ/watch?utm_content=DAGpvKKgXfc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hb3ca74eece
