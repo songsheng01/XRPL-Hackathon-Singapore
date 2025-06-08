@@ -48,8 +48,8 @@ export default function MainStats() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
           <StatCard label="XRP → RLUSD" value={price} sub={delta} />
-          <StatCard label="Total XRP in Pool" value={poolXRP} sub="XRP" />
-          <StatCard label="Total RLUSD Debt" value={poolDebt} sub="RLUSD" />
+          <StatCard label="Lending Pool Liquidity" value={poolXRP} sub="RLUSD" />
+          <StatCard label="Total Active Debt" value={poolDebt} sub="RLUSD" />
           <StatCard label="Utilisation" value={utilisation} />
         </div>
       </div>

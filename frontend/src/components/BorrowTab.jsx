@@ -161,6 +161,10 @@ export default function BorrowTab() {
           <span className="font-medium">{collateral} XRP</span> → Borrow&nbsp;
           <span className="font-medium">{maxBorrow} RLUSD</span>
         </p>
+        <p className="mt-2 text-sm">
+          Loan APR&nbsp;
+          <span className="font-medium">7%</span>
+        </p>
 
         <button
           className="mt-4 w-full py-2 rounded-lg bg-purple-600 hover:bg-purple-700 transition disabled:opacity-40"
