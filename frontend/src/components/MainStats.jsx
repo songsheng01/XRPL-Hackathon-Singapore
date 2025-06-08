@@ -3,6 +3,11 @@ import { useEffect, useState } from "react";
 export default function MainStats() {
   const [price, setPrice] = useState("—");     // XRP per 1 RLUSD
   const [delta, setDelta] = useState("0.0%");
+  const [poolXRP,setpoolXRP] = useState("—");
+  const [poolDebt,setpoolDebt] = useState("—");;
+  // const poolXRP = "12 345";
+  // const poolDebt = "5 700";
+  const utilisation = "46 %";
 
   // fetch on mount + every 60 s
   useEffect(() => {
@@ -20,10 +25,22 @@ export default function MainStats() {
         }
         prev = p;
         setPrice(p.toFixed(4));
+
+        const responese1 = await fetch("/mainwallet/balance");
+        const { success, balances } = await responese1.json();
+        if (!success) {
+          throw new Error("Failed to fetch balances");
+        }
+
+        const { xrp, rlusd } = balances;
+        setpoolXRP(xrp);
+        setpoolDebt(rlusd);
       } catch (err) {
         console.error("Price fetch failed", err);
         setPrice("—");
         setDelta("—");
+        setpoolXRP("—");
+        setpoolDebt("—");
       }
     }
 
@@ -33,9 +50,7 @@ export default function MainStats() {
   }, []);
 
   // placeholder pool stats (replace later)
-  const poolRLUSD = "100";
-  const poolDebt = "46";
-  const utilisation = "46%";
+  
 
   return (
     <section className="relative overflow-hidden">
@@ -48,8 +63,8 @@ export default function MainStats() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
           <StatCard label="XRP → RLUSD" value={price} sub={delta} />
-          <StatCard label="Lending Pool Liquidity" value={poolRLUSD} sub="RLUSD" />
-          <StatCard label="Total Active Debt" value={poolDebt} sub="RLUSD" />
+          <StatCard label="Lending Pool Liquidity" value={poolDebt} sub="RLUSD" />
+          <StatCard label="Total Active XRP" value={poolXRP} sub="XRP" />
           <StatCard label="Utilisation" value={utilisation} />
         </div>
       </div>

@@ -1,8 +1,48 @@
+import { useEffect, useState, useContext } from "react";
+import { WalletContext } from "./WalletContext";
+import { sendPayment } from "@gemwallet/api";
+import { POOL_ADDRESS } from "../config";
+import { RLUSD_HEX, RLUSD_ISSUER } from "../config";
+
 export default function LiquidateTab() {
-  const unhealthy = [
-    { id: "C3D4", borrower: "rXYZ…123", repay: 50, bounty: 55 },
-    { id: "E5F6", borrower: "rABC…789", repay: 32, bounty: 35.2 }
-  ];
+ const { connected, address, balances, refresh } = useContext(WalletContext);
+
+//  const unhealthy = [
+//     { id: "C3D4", borrower: "rXYZ…123", repay: 50, bounty: 55 },
+//     { id: "E5F6", borrower: "rABC…789", repay: 32, bounty: 35.2 }
+//   ];
+ const [unhealthy,setUnhealthy] = useState([]);
+ const pullHistory = async () => {
+  if (!connected) { setUnhealthy([]); return; }
+  try {
+    const r = await fetch("/loans/history", { method: "POST" });
+    const { response } = await r.json();          // backend returns all
+    const mineRaw = response.filter((i) => i.status === 'unhealthy');
+    console.log(mineRaw)
+
+    const mapped = mineRaw.map((i) => {
+      const rawId = i.txn;
+      const id = rawId.slice(0, 6) + "…";
+      const repay = Number(i.totaldebt);
+      const borrower = i.borrower.slice(0,4) + "…" + i.borrower.slice(-3);
+      const bounty= Number(i.xrpAmount);
+      return {
+        id,
+        borrower,
+        repay,
+        bounty
+      };
+    });
+    console.log(mapped);
+    setUnhealthy(mapped);
+  } catch { }
+};
+
+  useEffect(() => {
+    pullHistory();
+    const id = setInterval(pullHistory, 45_000);
+    return () => clearInterval(id);
+  }, [connected, address]);
 
   return (
     <div className="space-y-6">
