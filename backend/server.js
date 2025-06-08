@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { Client } from "xrpl";
 import loansRouter from "./routes/loans.js";
-
+import lpRouter from "./routes/lp.js";
 
 dotenv.config();
 const app = express();
@@ -20,6 +20,7 @@ app.get("/api/ledger", async (_req, res) => {
 });
 
 app.use('/loans',loansRouter);
+app.use('/lp',lpRouter);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
