@@ -5,6 +5,10 @@ First native XRPL collateral-lending pool, establishing groundwork for plug-in R
 ## Project Overview
 We built the first native collateral-backed lending protocol on the XRP Ledger. Borrowers lock any token on the XRP chain, mint RLUSD at 50% LTV, pay interest, and can be liquidated if their LTV is above a set threshold. Liquidity providers earn yield by supplying RLUSD to the pool; interest is distributed pro-rata. The demo is prepared with the XRP (collateral) / RLUSD (debt) pair.
 
+![Borrowing](demo1.png)
+![Liquidity Providing](demo2.png)
+![Liquidation](demo3.png)
+
 ## Problems It Solves
 1. Dormant capital: idle token on the XRPL can now earn yield or fund productive loans.
 2. On-ledger credit gap: XRPL lacked a money-market; our pool closes that gap without bridges or wrapped tokens.
@@ -51,3 +55,6 @@ These XRPL primitives—cheap deterministic finality, built-in Dex pricing, and 
 
 ## Summary
 We turned idle assets on the XRPL into productive collateral, launched the first lending rail on XRPL, and built a bridge-ready base for future smart-contract upgrades and RWA finance—from carbon credits to idle corporate capital—while giving RLUSD a deep, yield-driven utility loop that boosts demand and on-ledger liquidity.
+
+## Presentation
+https://www.canva.com/design/DAGj7wkQQIU/oy37-7B12TWq4pjgbMoVQg/edit?utm_content=DAGj7wkQQIU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
