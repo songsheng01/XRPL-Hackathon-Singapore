@@ -33,9 +33,9 @@ export default function MainStats() {
   }, []);
 
   // placeholder pool stats (replace later)
-  const poolXRP = "12 345";
-  const poolDebt = "5 700";
-  const utilisation = "46 %";
+  const poolRLUSD = "100";
+  const poolDebt = "46";
+  const utilisation = "46%";
 
   return (
     <section className="relative overflow-hidden">
@@ -48,7 +48,7 @@ export default function MainStats() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
           <StatCard label="XRP → RLUSD" value={price} sub={delta} />
-          <StatCard label="Lending Pool Liquidity" value={poolXRP} sub="RLUSD" />
+          <StatCard label="Lending Pool Liquidity" value={poolRLUSD} sub="RLUSD" />
           <StatCard label="Total Active Debt" value={poolDebt} sub="RLUSD" />
           <StatCard label="Utilisation" value={utilisation} />
         </div>
