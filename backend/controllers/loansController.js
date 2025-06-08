@@ -3,6 +3,7 @@ import { repayLoan } from "../services/loanService.js";
 import { latestPx } from "../services/oracleService.js";
 import { sendPayment } from "../lib/signer.js";
 import { RLUSD_HEX, RLUSD_ISSUER } from "../config.js";
+import { updateInterest } from "../models/loanModel.js";
 
 export const newLoanController = async (req, res) =>{
     try {
@@ -61,6 +62,17 @@ export const  updateLoanStatusController = async( req,res ) => {
     }
 }
 
+export const updateInterestController = async (req,res) =>{
+    try {
+        const {txn} = req.body;
+        const response = await updateInterest(txn);
+        return res.status(200).json({ success: true, response: response });
+    }catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
 export const repayLoanController = async (req, res) => {
   try {
     const { loanId } = req.body;
@@ -79,4 +91,4 @@ export const repayLoanController = async (req, res) => {
   }
 };
 
-export default { newLoanController, getLoanHistroyController, updateLoanStatusController, repayLoanController };
+export default { newLoanController, getLoanHistroyController, updateLoanStatusController, repayLoanController, updateInterestController };
